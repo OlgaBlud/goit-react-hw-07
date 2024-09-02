@@ -1,13 +1,6 @@
-// fetchContacts - одержання масиву контактів (метод GET) запитом.
-// Базовий тип екшену це рядок "contacts/fetchAll".
 // addContact - додавання нового контакту (метод POST).
 // Базовий тип екшену це рядок "contacts/addContact".
-// deleteContact - видалення контакту по ID (метод DELETE).
-// Базовий тип екшену це рядок "contacts/deleteContact".
 
-// Для коректного опрацювання помилки HTTP-запиту в середині операцій, використай конструкцію try...catch, та у блоці catch поверни результат виклику методу thunkAPI.rejectWithValue.
-
-// Обробку усіх трьох екшенів (fulfilled, rejected, pending) та зміну даних у стані Redux зроби у властивості extraReducers слайсу контактів, а от властивість reducers з нього — прибери.
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
@@ -20,6 +13,17 @@ export const fetchContacts = createAsyncThunk(
     try {
       const response = await axios.get("/contacts");
       return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+export const deleteContact = createAsyncThunk(
+  "contacts/deleteContact",
+  async (contactId, thunkAPI) => {
+    try {
+      const { data } = await axios.delete(`/contacts/${contactId}`);
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
