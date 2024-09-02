@@ -1,6 +1,3 @@
-// addContact - додавання нового контакту (метод POST).
-// Базовий тип екшену це рядок "contacts/addContact".
-
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
@@ -23,6 +20,17 @@ export const deleteContact = createAsyncThunk(
   async (contactId, thunkAPI) => {
     try {
       const { data } = await axios.delete(`/contacts/${contactId}`);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
+    }
+  }
+);
+export const addContact = createAsyncThunk(
+  "contacts/addContact",
+  async (profile, thunkAPI) => {
+    try {
+      const { data } = await axios.post("/contacts", profile);
       return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);

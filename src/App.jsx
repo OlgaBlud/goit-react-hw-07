@@ -15,16 +15,15 @@ function App() {
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-
+  // console.log("items app", items);
   return (
     <div className="phonebookWrap">
       <h1>Phonebook</h1>
       {loading && <h2>Loading...</h2>}
       {error && <h2>{error}</h2>}
-      {items.length > 0 && <ContactForm />}
-
+      <ContactForm />
       <SearchBox />
-      <ContactList />
+      {items.length > 0 && <ContactList />}
     </div>
   );
 }
