@@ -9,13 +9,12 @@ import { fetchContacts } from "./redux/contactsOps";
 
 function App() {
   const dispatch = useDispatch();
-  // Отримуємо частини стану
   const { items, loading, error } = useSelector(selectContacts);
-  // Викликаємо операцію
+
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
-  // console.log("items app", items);
+
   return (
     <div className="phonebookWrap">
       <h1>Phonebook</h1>
