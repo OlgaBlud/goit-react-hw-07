@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { fetchContacts } from "./contactsOps";
 const INITIAL_STATE = {
   items: [],
   loading: false,
@@ -14,31 +15,24 @@ const contactsSlice = createSlice({
     deleteContact: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
     },
-    // Виконається в момент старту HTTP-запиту
-    fetchingInProgress(state) {
-      state.loading = true;
-    },
-    // Виконається якщо HTTP-запит завершився успішно
-    fetchingSuccess(state, action) {
-      state.loading = false;
-      state.error = null;
-      state.items = action.payload;
-    },
-    // Виконається якщо HTTP-запит завершився з помилкою
-    fetchingError(state, action) {
-      state.loading = false;
-      state.error = action.payload;
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchContacts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchContacts.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.items = payload;
+      })
+      .addCase(fetchContacts.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload;
+      });
   },
 });
 
-export const {
-  addContact,
-  deleteContact,
-  fetchingInProgress,
-  fetchingSuccess,
-  fetchingError,
-} = contactsSlice.actions;
+export const { addContact, deleteContact } = contactsSlice.actions;
 export const contactsReducer = contactsSlice.reducer;
-export const contactsArr = (state) => state.contacts.items;
-export const getContacts = (state) => state.contacts;
+export const selectContacts = (state) => state.contacts;
